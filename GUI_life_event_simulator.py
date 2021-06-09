@@ -18,16 +18,14 @@ event_choice = st.sidebar.selectbox(
     ("Getting a child", "Living together", "Buying a house")
 )
 
+bucket_choice = st.sidebar.slider('Salary Bucket', 0, 8, 1)
+
 @st.cache
-def load_cbs_data():
-    df = pd.read_csv('data_cbs.csv',sep = ';')
+def load_data():
+    df = pd.read_csv('data_new.csv',sep = ',')
     return df
 
-df_choice = pd.DataFrame([{'CustomerType': customer_choice,
-                          'LifeEvent': event_choice}])
-
-df_cbs = load_cbs_data()
-df_selected_cbs = df_choice.merge(df_cbs, on =['CustomerType','LifeEvent'], how='left')
+df = load_data()
 
 cols = st.beta_columns((1,1,1,1))
 
@@ -36,15 +34,15 @@ cols[0].image('grocery2.png')
 cols[0].image('subsidy2.png')
 cols[0].image('energy2.png')
 
-n11 = df_selected_cbs[df_selected_cbs['Category'] == 'Groceries']['No kids'].values[0]
-n12 = df_selected_cbs[df_selected_cbs['Category'] == 'Toeslagen']['No kids'].values[0]
-n13 = df_selected_cbs[df_selected_cbs['Category'] == 'Energy']['No kids'].values[0]
-n21 = df_selected_cbs[df_selected_cbs['Category'] == 'Groceries']['Delta'].values[0]
-n22 = df_selected_cbs[df_selected_cbs['Category'] == 'Toeslagen']['Delta'].values[0]
-n23 = df_selected_cbs[df_selected_cbs['Category'] == 'Energy']['Delta'].values[0]
-n31 = df_selected_cbs[df_selected_cbs['Category'] == 'Groceries']['Plus 1 kid'].values[0]
-n32 = df_selected_cbs[df_selected_cbs['Category'] == 'Toeslagen']['Plus 1 kid'].values[0]
-n33 = df_selected_cbs[df_selected_cbs['Category'] == 'Energy']['Plus 1 kid'].values[0]
+n11 = int(abs(df['nz_avg_boodschappen'][bucket_choice]))
+n12 = int(abs(df['nz_avg_toeslagen'][bucket_choice]))
+n13 = int(abs(df['nz_avg_energie_water'][bucket_choice]))
+n21 = int(abs(df['nz_avg_boodschappen'][bucket_choice]))
+n22 = int(abs(df['nz_avg_toeslagen'][bucket_choice]))
+n23 = int(abs(df['nz_avg_energie_water'][bucket_choice]))
+n31 = int(abs(df['nz_avg_boodschappen'][bucket_choice]))
+n32 = int(abs(df['nz_avg_toeslagen'][bucket_choice]))
+n33 = int(abs(df['nz_avg_energie_water'][bucket_choice]))
 
 cols[1].subheader('Current:')
 cols[1].markdown('<br/><br/>', unsafe_allow_html=True)
